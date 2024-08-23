@@ -23,8 +23,8 @@ const TokenExchange = () => {
     const [createSellOrderAmount, setCreateSellOrderAmount] = useState('');
     const [withdrawAmountA, setWithdrawAmountA] = useState('');
     const [withdrawAmountB, setWithdrawAmountB] = useState('');
-    const [executeBuyOrderPrice, setExecuteBuyOrderPrice] = useState('');
     const [executeSellOrderPrice, setExecuteSellOrderPrice] = useState('');
+    const [executeBuyOrderAmount, setExecuteBuyOrderAmount] = useState('');
 
     useEffect(() => {
         if (window.ethereum) {
@@ -33,7 +33,7 @@ const TokenExchange = () => {
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(accounts => setAccount(accounts[0]));
 
-            const contractAddress = '0xFB20b2E1837FA0cd7392045BDa396e582E4AC486';
+            const contractAddress = '0x9629a54d6b48Def6792F6a6Fc4CF3F03Db8345d0';
             const contractInstance = new web3.eth.Contract(TokenExchangeABI, contractAddress);
             setContract(contractInstance);
 
@@ -207,23 +207,21 @@ const TokenExchange = () => {
     const executeBuyOrderAtMarket = async () => {
       try {
           // Verificar que el precio y la cantidad no estén vacíos
-          if (!executeBuyOrderPrice || !executeBuyOrderAmount) {
-              alert('Please enter both price and amount.');
+          if (!executeBuyOrderAmount) {
+              alert('Please enter amount.');
               return;
           }
   
           // Convertir el precio y la cantidad a wei
-          const priceInWei = web3.utils.toWei(executeBuyOrderPrice, 'ether');
           const amountInWei = web3.utils.toWei(executeBuyOrderAmount, 'ether');
   
           // Llamar al método del contrato
-          await contract.methods.executeBuyOrderAtMarketUsingInternalBalance(priceInWei, amountInWei).send({
+          await contract.methods.executeBuyOrderAtMarketUsingInternalBalance(amountInWei).send({
               from: account,
               gasPrice: web3.utils.toWei('30', 'gwei')
           });
   
           alert('Buy order executed successfully!');
-          setExecuteBuyOrderPrice('');
           setExecuteBuyOrderAmount('');
           getSellOrders();
           getBuyOrders();
@@ -254,7 +252,7 @@ const TokenExchange = () => {
         try {
             const orders = await contract.methods.getSellOrders().call();
             const formattedOrders = orders.map(order => ({
-                price: (parseFloat(order.price) / 1e18).toFixed(18),
+                price: (parseFloat(order.price) / 1e36).toFixed(18),
                 amount: parseFloat(web3.utils.fromWei(order.amount, 'ether')).toFixed(18),
                 user: order.user
             }));
@@ -272,8 +270,8 @@ const TokenExchange = () => {
             const sortedOrders = Object.keys(orderMap)
                 .sort((a, b) => parseFloat(a) - parseFloat(b))
                 .map(price => ({
-                    price: parseFloat(price).toFixed(18),
-                    totalAmount: orderMap[price].toFixed(18)
+                    price: parseFloat(price).toFixed(2),
+                    totalAmount: orderMap[price].toFixed(2)
                 }));
 
             setSellOrders(sortedOrders);
@@ -286,7 +284,7 @@ const TokenExchange = () => {
         try {
             const orders = await contract.methods.getBuyOrders().call();
             const formattedOrders = orders.map(order => ({
-                price: (parseFloat(order.price) / 1e18).toFixed(18),
+                price: (parseFloat(order.price) / 1e36).toFixed(18),
                 amount: parseFloat(web3.utils.fromWei(order.amount, 'ether')).toFixed(18),
                 user: order.user
             }));
@@ -304,8 +302,8 @@ const TokenExchange = () => {
             const sortedOrders = Object.keys(orderMap)
                 .sort((a, b) => parseFloat(a) - parseFloat(b))
                 .map(price => ({
-                    price: parseFloat(price).toFixed(18),
-                    totalAmount: orderMap[price].toFixed(18)
+                    price: parseFloat(price).toFixed(2),
+                    totalAmount: orderMap[price].toFixed(2)
                 }));
 
             setBuyOrders(sortedOrders);
@@ -324,23 +322,6 @@ const TokenExchange = () => {
                 <button onClick={withdrawPendingBalances}>Withdraw Pending Balances</button>
             </div>
             <div>
-                <h2>Deposit</h2>
-                <input
-                    type="number"
-                    placeholder="Amount of ONCE"
-                    value={depositAmountA}
-                    onChange={(e) => setDepositAmountA(e.target.value)}
-                />
-                <button onClick={depositTokenA}>Deposit ONCE</button>
-                <input
-                    type="number"
-                    placeholder="Amount of USDC"
-                    value={depositAmountB}
-                    onChange={(e) => setDepositAmountB(e.target.value)}
-                />
-                <button onClick={depositTokenB}>Deposit USDC</button>
-            </div>
-            <div>
                 <h2>Approve Tokens</h2>
                 <input
                     type="number"
@@ -356,6 +337,23 @@ const TokenExchange = () => {
                     onChange={(e) => setApproveAmountB(e.target.value)}
                 />
                 <button onClick={approveTokenB}>Approve USDC</button>
+            </div>
+            <div>
+                <h2>Deposit</h2>
+                <input
+                    type="number"
+                    placeholder="Amount of ONCE"
+                    value={depositAmountA}
+                    onChange={(e) => setDepositAmountA(e.target.value)}
+                />
+                <button onClick={depositTokenA}>Deposit ONCE</button>
+                <input
+                    type="number"
+                    placeholder="Amount of USDC"
+                    value={depositAmountB}
+                    onChange={(e) => setDepositAmountB(e.target.value)}
+                />
+                <button onClick={depositTokenB}>Deposit USDC</button>
             </div>
             <div>
                 <h2>Withdraw Tokens</h2>
@@ -400,7 +398,7 @@ const TokenExchange = () => {
                 />
                 <input
                     type="number"
-                    placeholder="Amount (in USDC)"
+                    placeholder="Amount (in ONCE)"
                     value={createSellOrderAmount}
                     onChange={(e) => setCreateSellOrderAmount(e.target.value)}
                 />
@@ -411,8 +409,8 @@ const TokenExchange = () => {
                 <input
                     type="number"
                     placeholder="Price (in USDC)"
-                    value={executeBuyOrderPrice}
-                    onChange={(e) => setExecuteBuyOrderPrice(e.target.value)}
+                    value={executeBuyOrderAmount}
+                    onChange={(e) => setExecuteBuyOrderAmount(e.target.value)}
                 />
                 <button onClick={executeBuyOrderAtMarket}>Execute Buy Order</button>
             </div>
