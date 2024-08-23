@@ -33,7 +33,7 @@ const TokenExchange = () => {
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(accounts => setAccount(accounts[0]));
 
-            const contractAddress = '0x9629a54d6b48Def6792F6a6Fc4CF3F03Db8345d0';
+            const contractAddress = '0xA129c83034818BDc3FD02Cd3b2DfF5CcD739fef0';
             const contractInstance = new web3.eth.Contract(TokenExchangeABI, contractAddress);
             setContract(contractInstance);
 
@@ -382,7 +382,7 @@ const TokenExchange = () => {
                 />
                 <input
                     type="number"
-                    placeholder="Amount (in ONCE)"
+                    placeholder="Amount (in USDC)"
                     value={createBuyOrderAmount}
                     onChange={(e) => setCreateBuyOrderAmount(e.target.value)}
                 />
@@ -408,7 +408,7 @@ const TokenExchange = () => {
                 <h2>Execute Buy Order at Market</h2>
                 <input
                     type="number"
-                    placeholder="Price (in USDC)"
+                    placeholder="USDC"
                     value={executeBuyOrderAmount}
                     onChange={(e) => setExecuteBuyOrderAmount(e.target.value)}
                 />
@@ -418,7 +418,7 @@ const TokenExchange = () => {
                 <h2>Execute Sell Order at Market</h2>
                 <input
                     type="number"
-                    placeholder="Price (in USDC)"
+                    placeholder="ONCE"
                     value={executeSellOrderPrice}
                     onChange={(e) => setExecuteSellOrderPrice(e.target.value)}
                 />
@@ -430,7 +430,7 @@ const TokenExchange = () => {
                     <thead>
                         <tr>
                             <th>Price (USDC)</th>
-                            <th>Amount (ONCE)</th>
+                            <th>Amount (USDC)</th>
                         </tr>
                     </thead>
                     <tbody>
