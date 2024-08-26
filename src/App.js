@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import TokenExchangeABI from './TokenExchangeABI.json';
 import ERC20ABI from './ERC20ABI.json';
+import './App.css';
+import OrderBook from './components/OrderBook';
+import TradeSection from './components/TradeSection';
+import BalanceSection from './components/BalanceSection';
 
 const TokenExchange = () => {
     const [web3, setWeb3] = useState(null);
@@ -349,164 +353,76 @@ const TokenExchange = () => {
     };
 
     return (
-        <div>
-            <h1>Token Exchange</h1>
-            {!account ? (
-                <button onClick={connectWallet}>Connect Wallet</button>
-            ) : (
-                <div>
-                    <p>Connected Account: {account}</p>
-                    <button onClick={disconnectWallet}>Disconnect Wallet</button>
-                </div>
-            )}
+        <div class="flexbox-container">
+          
+          <div>
+          <OrderBook 
+                    tokenA="ONCE"
+                    tokenB="USDC"
+                    sellOrders={sellOrders.map(order => ({
+                        price: order.price,
+                        amountA: order.totalAmount,
+                        amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
+                    }))}
+                    buyOrders={buyOrders.map(order => ({
+                        price: order.price,
+                        amountA: order.totalAmount,
+                        amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
+                    }))}
+                    currentPrice={sellOrders[0]?.price || buyOrders[buyOrders.length - 1]?.price || 'N/A'}
+                    onRefresh={reloadOrders}
+            />
+          </div>
+
             <div>
-            <h2>Internal Balances</h2>
-                        <button onClick={reloadBalances}>Reload</button>
-                        <p>ONCE Balance: {balanceTokenA !== null ? balanceTokenA : '...'}</p>
-                        <p>USDC Balance: {balanceTokenB !== null ? balanceTokenB : '...'}</p>
-                <button onClick={withdrawPendingBalances}>Withdraw Pending Balances</button>
+            <TradeSection 
+                    executeBuyOrderAmount={executeBuyOrderAmount}
+                    setExecuteBuyOrderAmount={setExecuteBuyOrderAmount}
+                    executeBuyOrderAtMarket={executeBuyOrderAtMarket}
+                    executeSellOrderPrice={executeSellOrderPrice}
+                    setExecuteSellOrderPrice={setExecuteSellOrderPrice}
+                    executeSellOrderAtMarket={executeSellOrderAtMarket}
+                    createBuyOrderAmount={createBuyOrderAmount}
+                    setCreateBuyOrderAmount={setCreateBuyOrderAmount}
+                    createBuyOrderPrice={createBuyOrderPrice}
+                    setCreateBuyOrderPrice={setCreateBuyOrderPrice}
+                    createBuyOrder={createBuyOrder}
+                    createSellOrderAmount={createSellOrderAmount}
+                    setCreateSellOrderAmount={setCreateSellOrderAmount}
+                    createSellOrderPrice={createSellOrderPrice}
+                    setCreateSellOrderPrice={setCreateSellOrderPrice}
+                    createSellOrder={createSellOrder}
+            />
             </div>
+            
             <div>
-                <h2>Approve Tokens</h2>
-                <input
-                    type="number"
-                    placeholder="Amount of ONCE"
-                    value={approveAmountA}
-                    onChange={(e) => setApproveAmountA(e.target.value)}
-                />
-                <button onClick={approveTokenA}>Approve ONCE</button>
-                <input
-                    type="number"
-                    placeholder="Amount of USDC"
-                    value={approveAmountB}
-                    onChange={(e) => setApproveAmountB(e.target.value)}
-                />
-                <button onClick={approveTokenB}>Approve USDC</button>
-            </div>
-            <div>
-                <h2>Deposit</h2>
-                <input
-                    type="number"
-                    placeholder="Amount of ONCE"
-                    value={depositAmountA}
-                    onChange={(e) => setDepositAmountA(e.target.value)}
-                />
-                <button onClick={depositTokenA}>Deposit ONCE</button>
-                <input
-                    type="number"
-                    placeholder="Amount of USDC"
-                    value={depositAmountB}
-                    onChange={(e) => setDepositAmountB(e.target.value)}
-                />
-                <button onClick={depositTokenB}>Deposit USDC</button>
-            </div>
-            <div>
-                <h2>Withdraw Tokens</h2>
-                <input
-                    type="number"
-                    placeholder="Amount of ONCE to withdraw"
-                    value={withdrawAmountA}
-                    onChange={(e) => setWithdrawAmountA(e.target.value)}
-                />
-                <button onClick={withdrawTokenA}>Withdraw ONCE</button>
-                <input
-                    type="number"
-                    placeholder="Amount of USDC to withdraw"
-                    value={withdrawAmountB}
-                    onChange={(e) => setWithdrawAmountB(e.target.value)}
-                />
-                <button onClick={withdrawTokenB}>Withdraw USDC</button>
-            </div>
-            <div>
-                <h2>Create Buy Order</h2>
-                <input
-                    type="number"
-                    placeholder="Price (in USDC)"
-                    value={createBuyOrderPrice}
-                    onChange={(e) => setCreateBuyOrderPrice(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Amount (in USDC)"
-                    value={createBuyOrderAmount}
-                    onChange={(e) => setCreateBuyOrderAmount(e.target.value)}
-                />
-                <button onClick={createBuyOrder}>Create Buy Order</button>
-            </div>
-            <div>
-                <h2>Create Sell Order</h2>
-                <input
-                    type="number"
-                    placeholder="Price (in USDC)"
-                    value={createSellOrderPrice}
-                    onChange={(e) => setCreateSellOrderPrice(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Amount (in ONCE)"
-                    value={createSellOrderAmount}
-                    onChange={(e) => setCreateSellOrderAmount(e.target.value)}
-                />
-                <button onClick={createSellOrder}>Create Sell Order</button>
-            </div>
-            <div>
-                <h2>Execute Buy Order at Market</h2>
-                <input
-                    type="number"
-                    placeholder="USDC"
-                    value={executeBuyOrderAmount}
-                    onChange={(e) => setExecuteBuyOrderAmount(e.target.value)}
-                />
-                <button onClick={executeBuyOrderAtMarket}>Execute Buy Order</button>
-            </div>
-            <div>
-                <h2>Execute Sell Order at Market</h2>
-                <input
-                    type="number"
-                    placeholder="ONCE"
-                    value={executeSellOrderPrice}
-                    onChange={(e) => setExecuteSellOrderPrice(e.target.value)}
-                />
-                <button onClick={executeSellOrderAtMarket}>Execute Sell Order</button>
-            </div>
-            <div>
-                <button onClick={reloadOrders}>Reload</button>
-                <h2>Buy Orders</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Price (USDC)</th>
-                            <th>Amount (USDC)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {buyOrders.map((order, index) => (
-                            <tr key={index}>
-                                <td>{order.price}</td>
-                                <td>{order.totalAmount}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div>
-                <h2>Sell Orders</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Price (USDC)</th>
-                            <th>Total Amount (ONCE)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sellOrders.map((order, index) => (
-                            <tr key={index}>
-                                <td>{order.price}</td>
-                                <td>{order.totalAmount}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <BalanceSection 
+                    account={account}
+                    connectWallet={connectWallet}
+                    disconnectWallet={disconnectWallet}
+                    balanceTokenA={balanceTokenA}
+                    balanceTokenB={balanceTokenB}
+                    withdrawAmountA={withdrawAmountA}
+                    setWithdrawAmountA={setWithdrawAmountA}
+                    withdrawTokenA={withdrawTokenA}
+                    approveAmountA={approveAmountA}
+                    setApproveAmountA={setApproveAmountA}
+                    approveTokenA={approveTokenA}
+                    depositAmountA={depositAmountA}
+                    setDepositAmountA={setDepositAmountA}
+                    depositTokenA={depositTokenA}
+                    withdrawAmountB={withdrawAmountB}
+                    setWithdrawAmountB={setWithdrawAmountB}
+                    withdrawTokenB={withdrawTokenB}
+                    approveAmountB={approveAmountB}
+                    setApproveAmountB={setApproveAmountB}
+                    approveTokenB={approveTokenB}
+                    depositAmountB={depositAmountB}
+                    setDepositAmountB={setDepositAmountB}
+                    depositTokenB={depositTokenB}
+                    reloadBalances={reloadBalances}
+                    withdrawPendingBalances={withdrawPendingBalances}
+            />
             </div>
         </div>
     );
