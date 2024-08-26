@@ -340,6 +340,24 @@
 	},
 	{
 		"inputs": [],
+		"name": "getAllowances",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "allowanceTokenA",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "allowanceTokenB",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getBuyOrders",
 		"outputs": [
 			{

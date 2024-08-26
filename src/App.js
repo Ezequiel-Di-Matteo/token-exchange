@@ -37,7 +37,7 @@ const TokenExchange = () => {
             const web3 = new Web3(window.ethereum);
             setWeb3(web3);
 
-            const contractAddress = '0xd01C0654f83EA99Bc9072D1932116a148fC01b59';
+            const contractAddress = '0xB18D3b3b21dA87037c62315b4070C58Bd4ff7E50';
             const contractInstance = new web3.eth.Contract(TokenExchangeABI, contractAddress);
             setContract(contractInstance);
 

@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 
 const TradeSection = ({
   executeBuyOrderAmount,
@@ -25,57 +27,57 @@ const TradeSection = ({
       </div>
 
       <form className="form-type" onSubmit={(e) => { e.preventDefault(); executeBuyOrderAtMarket(); }}>
-        <label htmlFor="token">Compra instantánea</label>
+        <label htmlFor="token">Instant buy</label>
         <div className="group">
           <input
             type="number"
             name="token"
             id="token"
-            placeholder="TOKEN B"
+            placeholder="USDC"
             value={executeBuyOrderAmount}
             onChange={(e) => setExecuteBuyOrderAmount(e.target.value)}
           />
           <button id="v2" className="button">
-            <i className="fa-solid fa-right-left"></i>
+            <FontAwesomeIcon icon={faRightLeft} />
           </button>
-          <button className="button2" type="submit">Comprar</button>
+          <button className="button2" type="submit">Buy</button>
         </div>
-        <p>= {executeBuyOrderAmount} TOKEN A</p>
+        <p>= {executeBuyOrderAmount} ONCE</p>
       </form>
 
       <form className="form-type" onSubmit={(e) => { e.preventDefault(); executeSellOrderAtMarket(); }}>
-        <label htmlFor="token2">Venta instantánea</label>
+        <label htmlFor="token2">Instant sell</label>
         <div className="group">
           <input
             type="number"
             name="token2"
             id="token2"
-            placeholder="TOKEN A"
+            placeholder="ONCE"
             value={executeSellOrderPrice}
             onChange={(e) => setExecuteSellOrderPrice(e.target.value)}
           />
           <button id="v3" className="button">
-            <i className="fa-solid fa-right-left"></i>
+            <FontAwesomeIcon icon={faRightLeft} />
           </button>
-          <button className="button2" type="submit">Vender</button>
+          <button className="button2" type="submit">Sell</button>
         </div>
-        <p>= {executeSellOrderPrice} TOKEN B</p>
+        <p>= {executeSellOrderPrice} USDC</p>
       </form>
 
       <form className="form-type f2" onSubmit={(e) => { e.preventDefault(); createBuyOrder(); }}>
-        <label htmlFor="token3">Orden de compra límite</label>
+        <label htmlFor="token3">Buy limit order</label>
         <div className="group f2">
           <input
             type="number"
             name="token3"
             id="token3"
-            placeholder="TOKEN B"
+            placeholder="USDC"
             value={createBuyOrderAmount}
             onChange={(e) => setCreateBuyOrderAmount(e.target.value)}
           />
           <input
             type="number"
-            placeholder="Precio"
+            placeholder="Price"
             name="price"
             id="price"
             value={createBuyOrderPrice}
@@ -83,23 +85,23 @@ const TradeSection = ({
           />
         </div>
         <p>= {createBuyOrderAmount/createBuyOrderPrice} ONCE</p>
-        <button className="button" type="submit">Crear orden de compra</button>
+        <button className="button" type="submit">Create limit order</button>
       </form>
 
       <form className="form-type f2" onSubmit={(e) => { e.preventDefault(); createSellOrder(); }}>
-        <label htmlFor="token4">Orden de venta límite</label>
+        <label htmlFor="token4">Sell limit order</label>
         <div className="group f2">
           <input
             type="number"
             name="token4"
             id="token4"
-            placeholder="TOKEN A"
+            placeholder="ONCE"
             value={createSellOrderAmount}
             onChange={(e) => setCreateSellOrderAmount(e.target.value)}
           />
           <input
             type="number"
-            placeholder="Precio"
+            placeholder="Price"
             name="price2"
             id="price2"
             value={createSellOrderPrice}
@@ -107,7 +109,7 @@ const TradeSection = ({
           />
         </div>
         <p>= {createSellOrderAmount*createSellOrderPrice} USDC</p>
-        <button className="button" type="submit">Crear orden de venta</button>
+        <button className="button" type="submit">Create limit order</button>
       </form>
     </div>
   );

@@ -35,14 +35,11 @@ const BalanceSection = ({
             {!account ? (
                 <button className="button" onClick={connectWallet}>Connect Wallet</button>
             ) : (
-                <div>
-                    <p>Connected Account: {account}</p>
-                    <button className="button" onClick={disconnectWallet}>Disconnect Wallet</button>
-                </div>
+                <button className="button" onClick={disconnectWallet}>Disconnect wallet</button>
             )}
 
             <div className="cont-f">
-                <h3>Token A: {balanceTokenA}</h3>
+                <h3>ONCE: {balanceTokenA}</h3>
                 <form onSubmit={(e) => { e.preventDefault(); withdrawTokenA(); }}>
                     <input
                         type="text"
@@ -76,7 +73,7 @@ const BalanceSection = ({
             </div>
 
             <div className="cont-f">
-                <h3>Token B: {balanceTokenB}</h3>
+                <h3>USDC: {balanceTokenB}</h3>
                 <form onSubmit={(e) => { e.preventDefault(); withdrawTokenB(); }}>
                     <input
                         type="text"
@@ -113,6 +110,13 @@ const BalanceSection = ({
                 <button className="button" onClick={reloadBalances}>Reload</button>
                 <button className="button" onClick={withdrawPendingBalances}>Withdraw all</button>
             </div>
+
+            {!account ? (
+                <p class="account-detection">Disconnected wallet</p>
+            ) : (
+                <p class="account-detection">Connected wallet: {account}</p>
+            )}
+
         </div>
     );
 };

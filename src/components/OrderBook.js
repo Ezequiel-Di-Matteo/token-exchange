@@ -4,12 +4,12 @@ const OrderBook = ({ tokenA, tokenB, sellOrders, buyOrders, currentPrice, onRefr
   return (
     <div id="order-book">
       <div className="head-dv">
-        <h2>Libro de Órdenes</h2>
+        <h2>Order book</h2>
       </div>
       <table className="order-table">
         <thead>
           <tr>
-            <th>Precio</th>
+            <th>Price</th>
             <th>{tokenA}</th>
             <th>{tokenB}</th>
           </tr>
@@ -38,7 +38,7 @@ const OrderBook = ({ tokenA, tokenB, sellOrders, buyOrders, currentPrice, onRefr
           ))}
         </tbody>
       </table>
-      <button className="button" onClick={onRefresh}>Actualizar</button>
+      <button className="button" onClick={onRefresh}>Update</button>
     </div>
   );
 };
