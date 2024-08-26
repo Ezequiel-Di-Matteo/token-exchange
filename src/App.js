@@ -6,6 +6,8 @@ import './App.css';
 import OrderBook from './components/OrderBook';
 import TradeSection from './components/TradeSection';
 import BalanceSection from './components/BalanceSection';
+import Header from './components/HeaderSection';
+
 
 const TokenExchange = () => {
     const [web3, setWeb3] = useState(null);
@@ -353,77 +355,86 @@ const TokenExchange = () => {
     };
 
     return (
-        <div class="flexbox-container">
-          
-          <div>
-          <OrderBook 
-                    tokenA="ONCE"
-                    tokenB="USDC"
-                    sellOrders={sellOrders.map(order => ({
-                        price: order.price,
-                        amountA: order.totalAmount,
-                        amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
-                    }))}
-                    buyOrders={buyOrders.map(order => ({
-                        price: order.price,
-                        amountA: order.totalAmount,
-                        amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
-                    }))}
-                    currentPrice={sellOrders[0]?.price || buyOrders[buyOrders.length - 1]?.price || 'N/A'}
-                    onRefresh={reloadOrders}
-            />
-          </div>
+        <div>
+            <body>
+            <Header />
+            <main>
+            <section>
+            <article>
+            <div>
+                    <BalanceSection 
+                        account={account}
+                        connectWallet={connectWallet}
+                        disconnectWallet={disconnectWallet}
+                        balanceTokenA={balanceTokenA}
+                        balanceTokenB={balanceTokenB}
+                        withdrawAmountA={withdrawAmountA}
+                        setWithdrawAmountA={setWithdrawAmountA}
+                        withdrawTokenA={withdrawTokenA}
+                        approveAmountA={approveAmountA}
+                        setApproveAmountA={setApproveAmountA}
+                        approveTokenA={approveTokenA}
+                        depositAmountA={depositAmountA}
+                        setDepositAmountA={setDepositAmountA}
+                        depositTokenA={depositTokenA}
+                        withdrawAmountB={withdrawAmountB}
+                        setWithdrawAmountB={setWithdrawAmountB}
+                        withdrawTokenB={withdrawTokenB}
+                        approveAmountB={approveAmountB}
+                        setApproveAmountB={setApproveAmountB}
+                        approveTokenB={approveTokenB}
+                        depositAmountB={depositAmountB}
+                        setDepositAmountB={setDepositAmountB}
+                        depositTokenB={depositTokenB}
+                        reloadBalances={reloadBalances}
+                        withdrawPendingBalances={withdrawPendingBalances}
+                    />
+                </div>
 
-            <div>
-            <TradeSection 
-                    executeBuyOrderAmount={executeBuyOrderAmount}
-                    setExecuteBuyOrderAmount={setExecuteBuyOrderAmount}
-                    executeBuyOrderAtMarket={executeBuyOrderAtMarket}
-                    executeSellOrderPrice={executeSellOrderPrice}
-                    setExecuteSellOrderPrice={setExecuteSellOrderPrice}
-                    executeSellOrderAtMarket={executeSellOrderAtMarket}
-                    createBuyOrderAmount={createBuyOrderAmount}
-                    setCreateBuyOrderAmount={setCreateBuyOrderAmount}
-                    createBuyOrderPrice={createBuyOrderPrice}
-                    setCreateBuyOrderPrice={setCreateBuyOrderPrice}
-                    createBuyOrder={createBuyOrder}
-                    createSellOrderAmount={createSellOrderAmount}
-                    setCreateSellOrderAmount={setCreateSellOrderAmount}
-                    createSellOrderPrice={createSellOrderPrice}
-                    setCreateSellOrderPrice={setCreateSellOrderPrice}
-                    createSellOrder={createSellOrder}
-            />
-            </div>
-            
-            <div>
-            <BalanceSection 
-                    account={account}
-                    connectWallet={connectWallet}
-                    disconnectWallet={disconnectWallet}
-                    balanceTokenA={balanceTokenA}
-                    balanceTokenB={balanceTokenB}
-                    withdrawAmountA={withdrawAmountA}
-                    setWithdrawAmountA={setWithdrawAmountA}
-                    withdrawTokenA={withdrawTokenA}
-                    approveAmountA={approveAmountA}
-                    setApproveAmountA={setApproveAmountA}
-                    approveTokenA={approveTokenA}
-                    depositAmountA={depositAmountA}
-                    setDepositAmountA={setDepositAmountA}
-                    depositTokenA={depositTokenA}
-                    withdrawAmountB={withdrawAmountB}
-                    setWithdrawAmountB={setWithdrawAmountB}
-                    withdrawTokenB={withdrawTokenB}
-                    approveAmountB={approveAmountB}
-                    setApproveAmountB={setApproveAmountB}
-                    approveTokenB={approveTokenB}
-                    depositAmountB={depositAmountB}
-                    setDepositAmountB={setDepositAmountB}
-                    depositTokenB={depositTokenB}
-                    reloadBalances={reloadBalances}
-                    withdrawPendingBalances={withdrawPendingBalances}
-            />
-            </div>
+                <div>
+                    <TradeSection 
+                        executeBuyOrderAmount={executeBuyOrderAmount}
+                        setExecuteBuyOrderAmount={setExecuteBuyOrderAmount}
+                        executeBuyOrderAtMarket={executeBuyOrderAtMarket}
+                        executeSellOrderPrice={executeSellOrderPrice}
+                        setExecuteSellOrderPrice={setExecuteSellOrderPrice}
+                        executeSellOrderAtMarket={executeSellOrderAtMarket}
+                        createBuyOrderAmount={createBuyOrderAmount}
+                        setCreateBuyOrderAmount={setCreateBuyOrderAmount}
+                        createBuyOrderPrice={createBuyOrderPrice}
+                        setCreateBuyOrderPrice={setCreateBuyOrderPrice}
+                        createBuyOrder={createBuyOrder}
+                        createSellOrderAmount={createSellOrderAmount}
+                        setCreateSellOrderAmount={setCreateSellOrderAmount}
+                        createSellOrderPrice={createSellOrderPrice}
+                        setCreateSellOrderPrice={setCreateSellOrderPrice}
+                        createSellOrder={createSellOrder}
+                    />
+                </div>
+
+                <div>
+                    <OrderBook 
+                        tokenA="ONCE"
+                        tokenB="USDC"
+                        sellOrders={sellOrders.map(order => ({
+                            price: order.price,
+                            amountA: order.totalAmount,
+                            amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
+                        }))}
+                        buyOrders={buyOrders.map(order => ({
+                            price: order.price,
+                            amountA: order.totalAmount,
+                            amountB: (parseFloat(order.price) * parseFloat(order.totalAmount)).toFixed(2)
+                        }))}
+                        currentPrice={sellOrders[0]?.price || buyOrders[buyOrders.length - 1]?.price || 'N/A'}
+                        onRefresh={reloadOrders}
+                    />
+                </div>
+                
+            </article>
+            </section>
+            </main>
+            </body>
         </div>
     );
 };
