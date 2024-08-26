@@ -33,7 +33,7 @@ const TokenExchange = () => {
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(accounts => setAccount(accounts[0]));
 
-            const contractAddress = '0xA129c83034818BDc3FD02Cd3b2DfF5CcD739fef0';
+            const contractAddress = '0xd01C0654f83EA99Bc9072D1932116a148fC01b59';
             const contractInstance = new web3.eth.Contract(TokenExchangeABI, contractAddress);
             setContract(contractInstance);
 
