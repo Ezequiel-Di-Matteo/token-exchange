@@ -87,6 +87,15 @@ const TokenExchange = () => {
         }
     };
 
+    const reloadBalances = () => {
+        getInternalBalances();
+    };
+
+    const reloadOrders = () => {
+        getBuyOrders();
+        getSellOrders();
+    };
+
     const withdrawPendingBalances = async () => {
         try {
             await contract.methods.withdrawPendingBalances().send({
@@ -351,9 +360,10 @@ const TokenExchange = () => {
                 </div>
             )}
             <div>
-                <h2>Internal Balances</h2>
-                <p>ONCE Balance: {balanceTokenA}</p>
-                <p>USDC Balance: {balanceTokenB}</p>
+            <h2>Internal Balances</h2>
+                        <button onClick={reloadBalances}>Reload</button>
+                        <p>ONCE Balance: {balanceTokenA !== null ? balanceTokenA : '...'}</p>
+                        <p>USDC Balance: {balanceTokenB !== null ? balanceTokenB : '...'}</p>
                 <button onClick={withdrawPendingBalances}>Withdraw Pending Balances</button>
             </div>
             <div>
@@ -460,6 +470,7 @@ const TokenExchange = () => {
                 <button onClick={executeSellOrderAtMarket}>Execute Sell Order</button>
             </div>
             <div>
+                <button onClick={reloadOrders}>Reload</button>
                 <h2>Buy Orders</h2>
                 <table>
                     <thead>
