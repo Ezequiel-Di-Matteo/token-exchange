@@ -30,8 +30,6 @@ const TokenExchange = () => {
         if (window.ethereum) {
             const web3 = new Web3(window.ethereum);
             setWeb3(web3);
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(accounts => setAccount(accounts[0]));
 
             const contractAddress = '0xd01C0654f83EA99Bc9072D1932116a148fC01b59';
             const contractInstance = new web3.eth.Contract(TokenExchangeABI, contractAddress);
@@ -43,12 +41,41 @@ const TokenExchange = () => {
             setTokenBContract(new web3.eth.Contract(ERC20ABI, tokenBAddress));
 
             if (account) {
+
                 getInternalBalances();
+
                 getSellOrders();
+
                 getBuyOrders();
+
             }
         }
     }, [account]);
+    
+     const connectWallet = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                setAccount(accounts[0]);
+            } catch (error) {
+                console.error("Error connecting to wallet:", error);
+                alert('Failed to connect wallet.');
+            }
+        } else {
+            alert('Please install MetaMask!');
+        }
+    };
+
+    const disconnectWallet = () => {
+        setAccount(null);
+        setWeb3(null);
+        setContract(null);
+        setTokenAContract(null);
+        setTokenBContract(null);
+        setBalanceTokenA(null);
+        setBalanceTokenB(null);
+        // Se limpia cualquier otro estado si es necesario
+    };
 
     const getInternalBalances = async () => {
         try {
@@ -315,6 +342,14 @@ const TokenExchange = () => {
     return (
         <div>
             <h1>Token Exchange</h1>
+            {!account ? (
+                <button onClick={connectWallet}>Connect Wallet</button>
+            ) : (
+                <div>
+                    <p>Connected Account: {account}</p>
+                    <button onClick={disconnectWallet}>Disconnect Wallet</button>
+                </div>
+            )}
             <div>
                 <h2>Internal Balances</h2>
                 <p>ONCE Balance: {balanceTokenA}</p>
